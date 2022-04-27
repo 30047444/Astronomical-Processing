@@ -1,3 +1,192 @@
-STUFF
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+/*
+    Astronomical Processing v 1.00
+    Rick Charles, UltraDyne Systems
+    Date Created: 06/04/2022
+    Program for recording and sorting 24 hours worth of astronomical data
+*/
+namespace AT2__Sprint
+{
+    public partial class Form1 : Form
+    {
+
+
+        int[] neutrinos = new int[24];
+        bool sorted = false;
+        bool becomeSkynet = false;
+        // ^^ Very important
+        bool found = false;
+        public Form1()
+        {
+            InitializeComponent();
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            listBox1.Items.Clear();
+            sorted = false;
+        }
+
+        //Search button, checks for integers and won't function unless list is sorted first.
+        private void Search_Click(object sender, EventArgs e)
+        {
+            int target;
+            int min = 0;
+            int max = neutrinos.Length - 1;
+            if (!(Int32.TryParse(Input.Text, out target)))
+            {
+                MessageBox.Show("Enter an valid Integer please.");
+                return;
+            }
+            if (sorted == false)
+            {
+                MessageBox.Show("Please sort the list first :)");
+            }
+            //else
+            //    listBox1.Items.Clear();
+            // ^^ holdover from re-listing the whole thing after what turned out to be an unnecessary Linear search >.<
+            while (min <= max)
+            {
+                int mid = (min + max) / 2;
+                if (neutrinos[mid] == target)
+                {
+                    listBox1.SetSelected(mid, true);
+                    MessageBox.Show(target + " found at index " + mid);
+                    found = true;
+                    break;
+                }
+                else if (target < neutrinos[mid])
+                {
+                    max = mid - 1;
+                }
+                else
+                {
+                    min = mid + 1;
+                }
+
+            }
+            /* Siiiiigh realised last minute I'd done a linear search so it's commented out in case I break the binary search :)
+              for (int i = 0; i < neutrinos.Length; i++)
+              {
+                  listBox1.Items.Add(neutrinos[i]);
+                  // Test if the array element matches the target.
+                  if (neutrinos[i] == target)
+                  {
+                      listBox1.Items.Add("^^^");
+                      MessageBox.Show(target + " found at index " + i);
+                      found = true;
+                  }
+              } */
+            if (found == false)
+            {
+                MessageBox.Show(target + " not found :(");
+            }
+            
+        }
+
+        //Populate button - one click generates 24 values between 10 and 99 and populates the array with those numbers.
+        private void Populate_Click(object sender, EventArgs e)
+        {
+            listBox1.Items.Clear();    
+            Random randNum = new Random();
+            for (int i = 0; i < neutrinos.Length; i++)
+            {
+                neutrinos[i] = randNum.Next(10, 99);
+            }
+            for (int i = 0; i < neutrinos.Length; i++)
+            {
+                listBox1.Items.Add(neutrinos[i]);
+            }
+        }
+
+        private void Sort_Click(object sender, EventArgs e)
+        {
+            //This is SUPPOSED to sort the array and re-list it but it does nothing and I don't know why :(
+            //Now works, trick was to go into the form and link the button using the little lightning bolt thingo.
+            //Leaving this comment because I subsequently forgot a week later that's how I fixed it when I had the issue with a different button.
+            int temp = 0;
+            for (int i = 0; i <= neutrinos.Length; i++)
+            {
+                for (int j = i + 1; j <= neutrinos.Length - 1; j++)
+                {
+                    if (neutrinos[i] > neutrinos[j])
+                    {
+                        temp = neutrinos[j];
+                        neutrinos[j] = neutrinos[i];
+                        neutrinos[i] = temp;
+                    }
+                }
+            }
+            sorted = true;
+            listBox1.Items.Clear();
+            for (int count = 0;  count < neutrinos.Length; count++)
+            {
+                listBox1.Items.Add(neutrinos[count]);
+            }
+        }
+
+        // Replace highlighted item and related item in array with new value.
+        private void Replace_Click(object sender, EventArgs e)
+        {
+            int temp = 0;
+            int lindex = 0;
+            object lvalue = 0;
+            int ledit = 0;
+            if (!(Int32.TryParse(Editor.Text, out ledit)))
+            {
+                MessageBox.Show("Enter a valid integer please.");
+                return;
+            }
+            lindex = (int)listBox1.SelectedIndex;
+            lvalue = (int)listBox1.SelectedItem;
+            neutrinos[lindex] = (int)ledit;
+            listBox1.Items.Clear();
+
+            // Sorts again in case replaced number puts it in a different spot.
+
+            for (int i = 0; i <= neutrinos.Length; i++)
+            {
+                for (int j = i + 1; j <= neutrinos.Length - 1; j++)
+                {
+                    if (neutrinos[i] > neutrinos[j])
+                    {
+                        temp = neutrinos[j];
+                        neutrinos[j] = neutrinos[i];
+                        neutrinos[i] = temp;
+                    }
+                }
+            }
+            listBox1.Items.Clear();
+            for (int count = 0; count < neutrinos.Length; count++)
+            {
+                listBox1.Items.Add(neutrinos[count]);
+            }
+        }
+
+        static void listBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void Input_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+    }
+}
+
 
 
