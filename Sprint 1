@@ -8,12 +8,14 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 /*
-    Astronomical Processing v 1.00
-    Rick Charles, UltraDyne Systems
-    Date Created: 06/04/2022
-    Program for recording and sorting 24 hours worth of astronomical data
+    Rick Charles, UltraDyne Systems.
+    04/05/2022
+    Version: 1.00
+    Astronomical Processing.
+    A simple UI to engage with 24 hours of recorded data.
+    Populates an array with data, can sort, search, and edit entries.
 */
-namespace AT2__Sprint
+namespace AstroPro
 {
     public partial class Form1 : Form
     {
@@ -22,7 +24,7 @@ namespace AT2__Sprint
         int[] neutrinos = new int[24];
         bool sorted = false;
         bool becomeSkynet = false;
-        // ^^ Very important
+        // ^^ Very important.
         bool found = false;
         public Form1()
         {
@@ -50,9 +52,7 @@ namespace AT2__Sprint
             {
                 MessageBox.Show("Please sort the list first :)");
             }
-            //else
-            //    listBox1.Items.Clear();
-            // ^^ holdover from re-listing the whole thing after what turned out to be an unnecessary Linear search >.<
+        //Binary search.
             while (min <= max)
             {
                 int mid = (min + max) / 2;
@@ -113,15 +113,15 @@ namespace AT2__Sprint
             //Now works, trick was to go into the form and link the button using the little lightning bolt thingo.
             //Leaving this comment because I subsequently forgot a week later that's how I fixed it when I had the issue with a different button.
             int temp = 0;
-            for (int i = 0; i <= neutrinos.Length; i++)
+            for (int left = 0; left <= neutrinos.Length; left++)
             {
-                for (int j = i + 1; j <= neutrinos.Length - 1; j++)
+                for (int right = left + 1; right <= neutrinos.Length - 1; right++)
                 {
-                    if (neutrinos[i] > neutrinos[j])
+                    if (neutrinos[left] > neutrinos[right])
                     {
-                        temp = neutrinos[j];
-                        neutrinos[j] = neutrinos[i];
-                        neutrinos[i] = temp;
+                        temp = neutrinos[right];
+                        neutrinos[right] = neutrinos[left];
+                        neutrinos[left] = temp;
                     }
                 }
             }
@@ -150,7 +150,7 @@ namespace AT2__Sprint
             neutrinos[lindex] = (int)ledit;
             listBox1.Items.Clear();
 
-            // Sorts again in case replaced number puts it in a different spot.
+        // Sorts again in case replaced number puts it in a different spot.
 
             for (int i = 0; i <= neutrinos.Length; i++)
             {
@@ -187,6 +187,3 @@ namespace AT2__Sprint
         }
     }
 }
-
-
-
